@@ -33,12 +33,17 @@ BUILD_DIR="$ROOT_DIR/build/ci/tidy"
 mkdir --parents "$BUILD_DIR" || exit $?
 cd "$BUILD_DIR" || exit $?
 cmake -GNinja \
-    -DUSE_EIGEN3=OFF \
+    -DLINT_ONLY=ON \
+    -DUSE_EIGEN3=ON \
     -DUSE_OPENCV=OFF \
+    -DUSE_PCL=OFF \
+    -DEIGEN3_INCLUDE_DIR="/etc/eigen/" \
     -DCMAKE_CXX_CLANG_TIDY="/usr/bin/clang-tidy-8" \
     -DWARNINGS=ON \
     -DWARNINGS_AS_ERRORS=ON \
     "$SOURCE_DIR" || exit $?
 cmake --build . || exit $?
+
+cmake -ULINT_ONLY "$SOURCE_DIR" || exit $?
 
 echo "All files are properly formatted!" ["$0"]
