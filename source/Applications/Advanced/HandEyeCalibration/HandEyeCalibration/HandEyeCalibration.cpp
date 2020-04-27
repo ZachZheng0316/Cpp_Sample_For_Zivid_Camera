@@ -8,6 +8,7 @@
 
 namespace
 {
+	// 命令类型
     enum class CommandType
     {
         cmdAddPose,
@@ -15,6 +16,7 @@ namespace
         cmdUnknown
     };
 
+	// 获取输入
     std::string getInput()
     {
         std::string command;
@@ -22,8 +24,15 @@ namespace
         return command;
     }
 
+	/* 函数意义: 输入操作指令; 
+	 * 		- "p"/"P": 表示添加机器人姿态指令；
+	 *		- "c"/"C": 表示执行手眼标定操作；
+	 * 参数意义：无参数
+	 * 返回值：返回操作的指令；
+	 */
     CommandType enterCommand()
     {
+		// p:表示添加机器人姿态; c: 表示执行手眼标定操作
         std::cout << "Enter command, p (to add robot pose) or c (to perform calibration): ";
         const auto command = getInput();
 
@@ -38,8 +47,14 @@ namespace
         return CommandType::cmdUnknown;
     }
 
+	/* 函数意义: 输入机器人位姿; 每个姿态带有一个id, 每个位姿用16个空格分开的值描述4*4-主矩阵的行;
+	 * 参数意义：
+	 *		- [in]index: 位姿的标签;
+	 * 返回值：机器人的位姿；
+	 */
     Zivid::HandEye::Pose enterRobotPose(size_t index)
     {
+		// 输入带id的位姿(用16个空格分开的值描述4x4行-主矩阵的行)
         std::cout << "Enter pose with id (a line with 16 space separated values describing 4x4 row-major matrix) : "
                   << index << std::endl;
         std::stringstream input(getInput());
@@ -56,6 +71,11 @@ namespace
         return robotPose;
     }
 
+	/* 函数意义: 获取棋盘格点框架; 
+	 * 参数意义：
+	 *		- [in]camera: 棋盘image;
+	 * 返回值：captureFrame；
+	 */
     Zivid::Frame acquireCheckerboardFrame(Zivid::Camera &camera)
     {
         std::cout << "Capturing checkerboard image... " << std::flush;
@@ -79,9 +99,11 @@ int main()
     {
         Zivid::Application zivid;
 
+		// 连接相机
         std::cout << "Connecting to camera..." << std::endl;
         auto camera{ zivid.connectCamera() };
 
+		// 输入机器人的位姿
         size_t currPoseId{ 0 };
         bool calibrate{ false };
         std::vector<Zivid::HandEye::CalibrationInput> input;
@@ -89,7 +111,7 @@ int main()
         {
             switch(enterCommand())
             {
-                case CommandType::cmdAddPose:
+                case CommandType::cmdAddPose:	// 添加机器人姿态的指令
                 {
                     try
                     {
@@ -97,6 +119,7 @@ int main()
 
                         const auto frame = acquireCheckerboardFrame(camera);
 
+						// 检测棋盘格的方形中心
                         std::cout << "Detecting checkerboard square centers... " << std::flush;
                         const auto result = Zivid::HandEye::detectFeaturePoints(frame.getPointCloud());
                         if(result)
@@ -117,12 +140,12 @@ int main()
                     }
                     break;
                 }
-                case CommandType::cmdCalibrate:
+                case CommandType::cmdCalibrate:	// 进行手眼标定的资料
                 {
                     calibrate = true;
                     break;
                 }
-                case CommandType::cmdUnknown:
+                case CommandType::cmdUnknown:	// 未知指令
                 {
                     std::cout << "Error: Unknown command" << std::endl;
                     break;
@@ -130,6 +153,7 @@ int main()
             }
         } while(!calibrate);
 
+		// 执行手眼标定
         std::cout << "Performing hand-eye calibration ... " << std::flush;
         const auto calibrationResult{ Zivid::HandEye::calibrateEyeToHand(input) };
         if(calibrationResult)
