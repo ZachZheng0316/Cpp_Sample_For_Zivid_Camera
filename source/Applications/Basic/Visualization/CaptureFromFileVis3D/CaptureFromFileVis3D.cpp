@@ -1,4 +1,4 @@
-// Please make sure that Zivid sample data has been selected during installation of Zivid software.
+// 请确保在安装Zivid软件时选择了Zivid样例数据.
 // Latest version of Zivid software (including samples) can be found at http://zivid.com/software/.
 
 #include <Zivid/CloudVisualizer.h>

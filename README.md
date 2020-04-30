@@ -27,7 +27,7 @@ There are two main categories of samples: **Camera** and **Applications**. The s
 - **Applications**
   - **基本**
     - **可视化**
-      - [**CaptureFromFileVis3D**][CaptureFromFileVis3D-url] - 这个例子展示了如何从文件中捕获一个Zivid点云，并将其可视化。.
+      - [**CaptureFromFileVis3D**][CaptureFromFileVis3D-url] - 这个例子展示了如何从文件中捕获一个Zivid点云，并将其可视化.
       - [**CaptureVis3D**][CaptureVis3D-url] - 这个例子展示了如何捕获一个Zivid点云，并将其可视化.
       - [**CaptureLiveVis3D**][CaptureLiveVis3D-url] - 这个例子演示了如何连续捕获一个Zivid点云，并将其可视化.
       - [**CaptureWritePCLVis3D**][CaptureWritePCLVis3D-url] - 这个示例展示了如何捕获Zivid点云，将其保存为.PCD文件格式，并将其可视化.
